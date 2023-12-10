@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useState } from 'react';
-import { app } from "./firebase"
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Link from "next/link";
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { useRouter } from "next/navigation"
+import { app } from "../firebase"
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
 
-export default function Home() {
+const page = () => {
 
   const router = useRouter();
   const auth = getAuth(app);
@@ -16,21 +17,21 @@ export default function Home() {
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    await signInWithEmailAndPassword(auth, email, password);
-    router.push('/todos');
+    e.preventDefault()
+    await createUserWithEmailAndPassword(auth, email, password)
+    router.push("/todos");
   }
   const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.currentTarget.value)
+    setEmail(e.currentTarget.value);
   }
   const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.currentTarget.value)
+    setPassword(e.currentTarget.value);
   }
 
   return (
     <div className="flex flex-col items-center">
 
-      <h2 className="text-4xl font-bold">Next Todo App</h2>
+      <h2 className="text-4xl font-bold">新規登録</h2>
 
       <form
         onSubmit={handleSubmit}
@@ -57,16 +58,18 @@ export default function Home() {
 
         <div className="flex justify-center mt-4">
           <Button type="submit" variant="contained">
-            ログイン
+            登録
           </Button>
         </div>
       </form>
 
       <div className="flex justify-end mt-6">
-          <Link href={"/signup"}>
-            新規登録はこちら
+          <Link href={"/"}>
+            登録済みの方はこちら
           </Link>
         </div>
     </div>
   )
 }
+
+export default page
