@@ -16,6 +16,7 @@ import { useParams } from "next/navigation";
 import { useRecoilValue } from "recoil";
 import { todosState } from "../../components/atoms";
 import Link from 'next/link';
+import { Button } from "@mui/material";
 
 const page = () => {
   // const router = useRouter();
@@ -27,37 +28,48 @@ const page = () => {
   return (
     <div>
       {todo ? (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>タスク名</TableCell>
-                <TableCell align="right">担当者</TableCell>
-                <TableCell align="right">ステータス</TableCell>
-                <TableCell align="right">内容</TableCell>
-                <TableCell align="right">期限</TableCell>
-                <TableCell align="right">編集</TableCell> 
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow
-                key={todo.id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell component="th" scope="todo">
-                  {todo.title}
-                </TableCell>
-                <TableCell align="right">{todo.responsible}</TableCell>
-                <TableCell align="right">{todo.status}</TableCell>
-                <TableCell align="right">{todo.detail}</TableCell>
-                <TableCell align="right">{todo.deadline}</TableCell>
-                <TableCell align="right">
-                  <Link href={`/todos/${todo.id}/edit`}>編集</Link>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <div className="flex flex-col items-center">
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>タスク名</TableCell>
+                  <TableCell align="right">担当者</TableCell>
+                  <TableCell align="right">ステータス</TableCell>
+                  <TableCell align="right">内容</TableCell>
+                  <TableCell align="right">期限</TableCell>
+                  {/* <TableCell align="right">編集</TableCell>  */}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow
+                  key={todo.id}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell component="th" scope="todo">
+                    {todo.title}
+                  </TableCell>
+                  <TableCell align="right">{todo.responsible}</TableCell>
+                  <TableCell align="right">{todo.status}</TableCell>
+                  <TableCell align="right">{todo.detail}</TableCell>
+                  <TableCell align="right">{todo.deadline}</TableCell>
+                  {/* <TableCell align="right">
+                    <Link href={`/todos/${todo.id}/edit`}>編集</Link>
+                  </TableCell> */}
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <div className="mt-6 flex justify-center items-center">
+            <Link href={`/todos/${todo.id}/edit`}>
+              <Button>編集</Button>
+            </Link>
+            <Link href='/todos'>
+              <Button>削除</Button>
+            </Link>
+          </div>
+        </div>
       ) : (
         <p>Todo is not found</p>
       )}
