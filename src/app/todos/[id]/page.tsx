@@ -22,9 +22,16 @@ import { getAuth } from "firebase/auth";
 import { app, db } from "@/app/firebase";
 import { collection, query, where, onSnapshot } from "firebase/firestore"; 
 
+type Comment = {
+  docId: string,
+  id: string,
+  text: string,
+  createAt: string,
+}
+
 const page = () => {
   const auth = getAuth(app);
-  const [comment, setComments] = useState('');
+  const [comments, setComments] = useState<Comment[]>([]);
 
   useEffect(() => {
     const commentsRef = collection(db, 'comments');
@@ -32,11 +39,12 @@ const page = () => {
     const q = query(commentsRef, where('id', '==', '0'));
   
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const comments = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
+      const commentsData = snapshot.docs.map(doc => ({
+        ...(doc.data() as Comment),
+        docId: doc.id,
       }));
-      console.log(comments);
+      console.log(commentsData);
+      setComments(commentsData);
     });
   
     // コンポーネントのアンマウント時にリスナーを解除
@@ -90,7 +98,11 @@ const page = () => {
 
           {/* コメント */}
           <div>
-
+            {comments.map((comment) => (
+              <div key={comment.docId}>
+                {comment.text}
+              </div>
+            ))}
           </div>
         </div>
       ) : (
