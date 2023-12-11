@@ -1,3 +1,8 @@
+/**
+ * 新規登録ページ
+ */
+
+
 "use client";
 
 import React, { useState } from "react";
