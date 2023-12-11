@@ -28,16 +28,17 @@ const page = () => {
 
   useEffect(() => {
     const commentsRef = collection(db, 'comments');
-    const q = query(commentsRef, where('id', '==', 0));
-
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const filteredComments = querySnapshot.docs.map(doc => ({
+    // 'id' フィールドが '0' であるドキュメントのみを取得するクエリ
+    const q = query(commentsRef, where('id', '==', '0'));
+  
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const comments = snapshot.docs.map(doc => ({
+        id: doc.id,
         ...doc.data(),
-        docId: doc.id // FirestoreのドキュメントIDを含める場合
       }));
-      console.log(filteredComments);
+      console.log(comments);
     });
-
+  
     // コンポーネントのアンマウント時にリスナーを解除
     return () => unsubscribe();
   }, []);
