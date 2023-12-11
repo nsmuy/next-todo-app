@@ -11,16 +11,15 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Button } from '@mui/material';
 
 import React from 'react';
 import Link from 'next/link';
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { todosState } from "../components/atoms";
 
 const page = () => {
 
-  const [todos, setTodos] = useRecoilState(todosState);
+  const todos = useRecoilValue(todosState);
   
   return (
     <div className='flex flex-col items-center'>
