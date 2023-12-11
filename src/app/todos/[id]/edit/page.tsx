@@ -11,7 +11,6 @@ const page = () => {
   const router = useRouter();
   const params = useParams();
   const [todos, setTodos] = useRecoilState(todosState);
-  console.log(params);
 
   const todo: Todo | undefined = todos.find((todo) => todo.id === params.id);
   const [title, setTitle] = useState<any>(todo?.title);
@@ -44,42 +43,55 @@ const page = () => {
   return (
     <div>
       {todo ? (
-        <form onSubmit={handleEditSubmit}>
-          <label htmlFor="title">タスク名</label>
-          <input
-            id="title"
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <label htmlFor="responsible">担当者</label>
-          <input
-            id="responsible"
-            type="text"
-            value={responsible}
-            onChange={(e) => setResponsible(e.target.value)}
+        <form
+          onSubmit={handleEditSubmit}
+          className="flex flex-col items-start gap-4"
+        >
+          <div>
+            <label htmlFor="title">タスク名</label>
+            <input
+              id="title"
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
-          <label htmlFor="status">ステート</label>
-          <input
-            id="status"
-            type="text"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-          />
-          <label htmlFor="detail">内容</label>
-          <input
-            id="detail"
-            type="text"
-            value={detail}
-            onChange={(e) => setDetail(e.target.value)}
-          />
-          <label htmlFor="deadline">期限</label>
-          <input
-            id="deadline"
-            type="text"
-            value={deadline}
-            onChange={(e) => setDeadline(e.target.value)}
-          />
+          </div>
+          <div>
+            <label htmlFor="responsible">担当者</label>
+            <input
+              id="responsible"
+              type="text"
+              value={responsible}
+              onChange={(e) => setResponsible(e.target.value)}
+              />
+          </div>
+          <div>
+            <label htmlFor="status">ステート</label>
+            <input
+              id="status"
+              type="text"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+            />
+          </div>
+          <div>
+            <label htmlFor="detail">内容</label>
+            <input
+              id="detail"
+              type="text"
+              value={detail}
+              onChange={(e) => setDetail(e.target.value)}
+            />
+          </div>
+          <div>
+            <label htmlFor="deadline">期限</label>
+            <input
+              id="deadline"
+              type="text"
+              value={deadline}
+              onChange={(e) => setDeadline(e.target.value)}
+            />
+          </div>
 
           <Button type="submit">確定</Button>
         </form>

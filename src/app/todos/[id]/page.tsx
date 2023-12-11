@@ -4,7 +4,7 @@
 
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -17,12 +17,33 @@ import { useRecoilValue } from "recoil";
 import { todosState } from "../../components/atoms";
 import Link from 'next/link';
 import { Button } from "@mui/material";
+import { Todo } from "../../../types/Todo";
+import { getAuth } from "firebase/auth";
+import { app, db } from "@/app/firebase";
+import { collection, query, where, onSnapshot } from "firebase/firestore"; 
 
 const page = () => {
-  // const router = useRouter();
-  const params = useParams();
-  const todos = useRecoilValue(todosState);
+  const auth = getAuth(app);
+  const [comment, setComments] = useState('');
 
+  useEffect(() => {
+    const commentsRef = collection(db, 'comments');
+    const q = query(commentsRef, where('id', '==', 0));
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const filteredComments = querySnapshot.docs.map(doc => ({
+        ...doc.data(),
+        docId: doc.id // FirestoreのドキュメントIDを含める場合
+      }));
+      console.log(filteredComments);
+    });
+
+    // コンポーネントのアンマウント時にリスナーを解除
+    return () => unsubscribe();
+  }, []);
+
+  const params = useParams();
+  const todos = useRecoilValue<Todo[]>(todosState);
   const todo = todos.find((todo) => todo.id === params.id);
 
   return (
@@ -38,7 +59,6 @@ const page = () => {
                   <TableCell align="right">ステータス</TableCell>
                   <TableCell align="right">内容</TableCell>
                   <TableCell align="right">期限</TableCell>
-                  {/* <TableCell align="right">編集</TableCell>  */}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -53,9 +73,6 @@ const page = () => {
                   <TableCell align="right">{todo.status}</TableCell>
                   <TableCell align="right">{todo.detail}</TableCell>
                   <TableCell align="right">{todo.deadline}</TableCell>
-                  {/* <TableCell align="right">
-                    <Link href={`/todos/${todo.id}/edit`}>編集</Link>
-                  </TableCell> */}
                 </TableRow>
               </TableBody>
             </Table>
@@ -68,6 +85,11 @@ const page = () => {
             <Link href='/todos'>
               <Button>削除</Button>
             </Link>
+          </div>
+
+          {/* コメント */}
+          <div>
+
           </div>
         </div>
       ) : (
