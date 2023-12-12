@@ -38,35 +38,53 @@ const Page = () => {
   
     setTodos(updatedTodos);
     router.push('/todos');
+    setTitle('');
+    setResponsible('');
+    setStatus('untouched');
+    setDeadline('');
+    setDeadline('');
+  }
+
+  const handleEditCancel = () => {
+    router.back();
+    setTitle('');
+    setResponsible('');
+    setStatus('untouched');
+    setDeadline('');
+    setDeadline('');
   }
 
   return (
-    <div>
+    <div className='flex flex-col items-center gap-10'>
+      <h2 className='text-4xl font-bold text-center'>タスクを編集する</h2>
+
       {todo ? (
         <form
           onSubmit={handleEditSubmit}
           className="flex flex-col items-start gap-4"
         >
-          <div>
-            <label htmlFor="title">タスク名</label>
+          <div className='flex gap-4'>
+            <label htmlFor="title" className='w-24'>タスク名</label>
             <input
               id="title"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              className='flex-1'
             />
           </div>
-          <div>
-            <label htmlFor="responsible">担当者</label>
+          <div className='flex gap-4'>
+            <label htmlFor="responsible" className='w-24'>担当者</label>
             <input
               id="responsible"
               type="text"
               value={responsible}
               onChange={(e) => setResponsible(e.target.value)}
+              className='flex-1'
               />
           </div>
-          <div>
-            <label htmlFor="status">ステート</label>
+          <div className='flex gap-4'>
+            <label htmlFor="status" className='w-24'>ステート</label>
             <input
               id="status"
               type="text"
@@ -74,29 +92,36 @@ const Page = () => {
               onChange={(e) => setStatus(e.target.value)}
             />
           </div>
-          <div>
-            <label htmlFor="detail">内容</label>
+          <div className='flex gap-4'>
+            <label htmlFor="detail" className='w-24'>内容</label>
             <input
               id="detail"
               type="text"
               value={detail}
               onChange={(e) => setDetail(e.target.value)}
+              className='flex-1'
             />
           </div>
-          <div>
-            <label htmlFor="deadline">期限</label>
+          <div className='flex gap-4'>
+            <label htmlFor="deadline" className='w-24'>期限</label>
             <input
               id="deadline"
               type="text"
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
+              className='flex-1'
             />
           </div>
 
-          <Button type="submit">確定</Button>
+          <div className="w-full flex justify-center gap-6 mt-6">
+            <Button onClick={handleEditCancel}>戻る</Button>
+            <Button type="submit">確定</Button>
+          </div>
         </form>
       ) : (
-        <p>Todo is not found</p>
+        <div>
+          <p>Todo is not found</p>
+        </div>
       )}
     </div>
   );

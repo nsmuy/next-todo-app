@@ -69,7 +69,7 @@ const Page = () => {
         </Table>
       </TableContainer>
 
-      <Link href={"/todos/create"}>
+      <Link href={"/todos/create"} className='mt-6'>
         <Button>タスクを追加する</Button>
       </Link>
 

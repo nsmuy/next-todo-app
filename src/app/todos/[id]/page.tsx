@@ -14,7 +14,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useParams } from "next/navigation";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { todosState } from "../../components/atoms";
 import Link from 'next/link';
 import { Button } from "@mui/material";
@@ -31,7 +31,7 @@ type Comment = {
 
 const Page = () => {
   const params = useParams();
-  const todos = useRecoilValue<Todo[]>(todosState);
+  const [todos, setTodos] = useRecoilState<Todo[]>(todosState);
   const todo = todos.find((todo) => todo.id === params.id);
   const [comments, setComments] = useState<Comment[]>([]);
   const [sendComments, setSendComments] = useState<string>('');
@@ -69,6 +69,11 @@ const Page = () => {
     setSendComments('');
   }
 
+  const handleTodoDelete = () => {
+    const newTodos = todos.filter(todo => todo.id !== params.id);
+    setTodos(newTodos);
+  }
+
   return (
     <div className='flex flex-col items-center'>
       <h2 className="text-4xl font-bold">タスク詳細</h2>
@@ -102,13 +107,14 @@ const Page = () => {
             </Table>
           </TableContainer>
 
-          <div className="mt-6 flex justify-center items-center">
+          <div className="w-full flex justify-center mt-6">
+            <Link href='/todos'>
+              <Button>前のページに戻る</Button>
+            </Link>
             <Link href={`/todos/${todo.id}/edit`}>
               <Button>編集</Button>
             </Link>
-            <Link href='/todos'>
-              <Button>削除</Button>
-            </Link>
+            <Button onClick={handleTodoDelete}>削除</Button>
           </div>
 
           {/* コメント */}
