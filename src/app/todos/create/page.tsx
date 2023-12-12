@@ -8,7 +8,7 @@ import { useRecoilState } from "recoil";
 import { todosState } from "@/app/components/atoms";
 import { v4 as uuidv4 } from 'uuid';
 
-const page = () => {
+const Page = () => {
 
   const [todos, setTodos] = useRecoilState<Todo[]>(todosState);
   const [newTodoTitle, setNewTodoTitle] = useState<Todo['title']>('');
@@ -102,4 +102,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

@@ -7,13 +7,12 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { app } from "../firebase"
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
 
-const page = () => {
+const Page = () => {
 
   const router = useRouter();
   const auth = getAuth(app);
@@ -76,4 +75,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

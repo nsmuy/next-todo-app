@@ -23,7 +23,7 @@ import { useRouter } from "next/navigation"
 import { useAuthContext } from '../context/AuthContext';
 
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const auth = getAuth(app);
   const todos = useRecoilValue<Todo[]>(todosState);
@@ -105,4 +105,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

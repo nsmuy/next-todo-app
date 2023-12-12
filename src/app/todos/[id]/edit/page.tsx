@@ -7,7 +7,7 @@ import { todosState } from "../../../components/atoms";
 import { Todo } from "../../../../types/Todo";
 import { Button } from "@mui/material";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const params = useParams();
   const [todos, setTodos] = useRecoilState(todosState);
@@ -102,4 +102,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

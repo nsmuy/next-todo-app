@@ -19,8 +19,7 @@ import { todosState } from "../../components/atoms";
 import Link from 'next/link';
 import { Button } from "@mui/material";
 import { Todo } from "../../../types/Todo";
-import { getAuth } from "firebase/auth";
-import { app, db } from "@/app/firebase";
+import { db } from "@/app/firebase";
 import { collection, query, where, onSnapshot, Timestamp, addDoc, orderBy } from "firebase/firestore"; 
 
 type Comment = {
@@ -30,8 +29,7 @@ type Comment = {
   sendAt: Timestamp,
 }
 
-const page = () => {
-  const auth = getAuth(app);
+const Page = () => {
   const params = useParams();
   const todos = useRecoilValue<Todo[]>(todosState);
   const todo = todos.find((todo) => todo.id === params.id);
@@ -144,4 +142,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
