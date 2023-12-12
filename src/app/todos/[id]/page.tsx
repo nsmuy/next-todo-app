@@ -9,7 +9,7 @@ import { useParams } from "next/navigation";
 import { useRecoilValue } from "recoil";
 import { todosState } from "../../components/atoms";
 import { Todo } from "../../../types/Todo";
-import TodoList from "../components/TodoList";
+import TodoList from "../components/TodoDetail";
 import Comments from "../components/Comments";
 
 const Page = () => {
