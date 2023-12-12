@@ -69,7 +69,7 @@ const Page = () => {
               <TableCell align="right">担当者</TableCell>
               <TableCell align="right">ステータス</TableCell>
               <TableCell align="right">期限</TableCell>
-              <TableCell align="right"></TableCell>
+              <TableCell align="right">詳細</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -78,16 +78,12 @@ const Page = () => {
                 key={todo.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-              <TableCell component="th" scope="todo">
-                  {todo.title}
-              </TableCell>
-              <TableCell align="right">{todo.responsible}</TableCell>
-              <TableCell align="right">{todo.status}</TableCell>
-              <TableCell align="right">{todo.deadline}</TableCell>
-              <TableCell align="right">
-                <Link href={`/todos/${todo.id}`}>詳細</Link>
-              </TableCell>
-            </TableRow>
+                <TableCell component="th" scope="todo">{todo.title}</TableCell>
+                <TableCell align="right">{todo.responsible}</TableCell>
+                <TableCell align="right">{todo.status}</TableCell>
+                <TableCell align="right">{todo.deadline}</TableCell>
+                <TableCell align="right"><Link href={`/todos/${todo.id}`}>詳細</Link></TableCell>
+              </TableRow>
             ))}
           </TableBody>
         </Table>

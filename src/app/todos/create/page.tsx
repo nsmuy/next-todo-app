@@ -24,9 +24,9 @@ const Page = () => {
     const newTodo: Todo = {
       id: uuidv4(),
       title: newTodoTitle,
-      responsible: newTodoResponsible,
-      status: newTodoStatus,
       detail: newTodoDetail,
+      status: newTodoStatus,
+      responsible: newTodoResponsible,
       deadline: newTodoDeadline
     }
 

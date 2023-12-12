@@ -1,3 +1,5 @@
+'use client';
+
 import { Todo } from '../../types/Todo'
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
