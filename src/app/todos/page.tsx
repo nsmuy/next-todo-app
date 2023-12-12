@@ -13,12 +13,15 @@ import Paper from '@mui/material/Paper';
 import React from 'react';
 import Link from 'next/link';
 import { useRecoilValue } from "recoil";
+// import { useRecoilState } from "recoil";
 import { todosState } from "../components/atoms";
 import { Todo } from "../../types/Todo";
+import { Button } from '@mui/material';
 
 const page = () => {
 
   const todos = useRecoilValue<Todo[]>(todosState);
+  // const [todos, setTodos] = useRecoilState<Todo[]>(todosState);
 
   return (
     <div className='flex flex-col items-center'>
@@ -54,7 +57,11 @@ const page = () => {
           ))}
         </TableBody>
       </Table>
-    </TableContainer>
+      </TableContainer>
+
+      <Link href={"/todos/create"}>
+        <Button>タスクを追加する</Button>
+      </Link>
     </div>
   )
 }
