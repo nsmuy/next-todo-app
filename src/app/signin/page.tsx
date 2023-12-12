@@ -24,22 +24,13 @@ const Page =() => {
     await signInWithEmailAndPassword(auth, email, password);
     router.push('/todos');
   }
-  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.currentTarget.value)
-  }
-  const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.currentTarget.value)
-  }
 
   return (
     <div className="flex flex-col items-center">
 
       <h2 className="text-4xl font-bold">ログイン</h2>
 
-      <form
-        onSubmit={handleSubmit}
-        className='mt-6'
-      >
+      <form onSubmit={handleSubmit} className='mt-6'>
         <div className='flex flex-col items-start'>
           <TextField
             id="standard-email-input"
@@ -47,7 +38,7 @@ const Page =() => {
             type="email"
             autoComplete="current-email"
             variant="standard"
-            onChange={handleChangeEmail}
+            onChange={(e) => setEmail(e.currentTarget.value)}
           />
           <TextField
             id="standard-password-input"
@@ -55,7 +46,7 @@ const Page =() => {
             type="password"
             autoComplete="current-password"
             variant="standard"
-            onChange={handleChangePassword}
+            onChange={(e) => setPassword(e.currentTarget.value)}
           />
         </div>
 
@@ -74,6 +65,5 @@ const Page =() => {
     </div>
   )
 }
-
 
 export default Page;
