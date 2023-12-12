@@ -8,6 +8,7 @@ export type UserType = User | null
 
 export type AuthContextProps = {
   user: UserType
+  loading: boolean
 }
 
 export type AuthProps = {
@@ -25,6 +26,7 @@ export const AuthProvider = ({ children }: AuthProps) => {
   const pathname = usePathname();
   const auth = getAuth(app)
   const [user, setUser] = useState<UserType>(null)
+  const [loading, setLoading] = useState<boolean>(true);
   const isAvailableForViewing =
     pathname === "/todos" ||
     pathname === "/todos/[id]" ||
@@ -32,11 +34,13 @@ export const AuthProvider = ({ children }: AuthProps) => {
     pathname === "/todos/create"
   const value = {
     user,
+    loading
   }
 
   useEffect(() => {
     const authStateChanged = onAuthStateChanged(auth, async (user) => {
-      setUser(user)
+      setUser(user);
+      setLoading(false)
       !user && !isAvailableForViewing && (await router.push("/"))
     })
     return () => {
@@ -46,7 +50,7 @@ export const AuthProvider = ({ children }: AuthProps) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   )
 }
