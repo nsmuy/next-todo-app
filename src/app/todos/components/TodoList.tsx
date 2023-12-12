@@ -15,8 +15,6 @@ import { db } from "@/app/firebase";
 
 const TodoList = () => {
 
-  const router = useRouter();
-  const params = useParams();
   const [todos, setTodos] = useState<Todo[]>([]);
 
   useEffect(() => {

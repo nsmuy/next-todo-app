@@ -14,8 +14,6 @@ import TodoList from './components/TodoList';
 
 const Page = () => {
   const router = useRouter();
-  const todos = useRecoilValue<Todo[]>(todosState);
-
   const { user, loading } = useAuthContext();
 
   // ユーザーがログインしていない場合、ログインページにリダイレクト

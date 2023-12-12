@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,43 +9,43 @@ import Paper from '@mui/material/Paper';
 import Link from 'next/link';
 import { Button } from "@mui/material";
 import { useRouter, useParams } from "next/navigation";
-import { useRecoilState } from "recoil";
-import { todosState } from "@/app/components/atoms";
 import { db } from "@/app/firebase";
-import { collection, query, where, onSnapshot, Timestamp, addDoc, orderBy } from "firebase/firestore";
+import { collection, query, where, onSnapshot, deleteDoc, doc} from "firebase/firestore";
 import { Todo } from "@/types/Todo";
 
 
 const TodoDetail = () => {
 
+  const [docId, setDocId] = useState('');
   const router = useRouter();
   const params = useParams();
-  const [todos, setTodos] = useRecoilState(todosState);
-  const todo = todos.find((todo) => todo.id === params.id);
-  if (!todo) {
-    return null;
-  }
+  const [todo, setTodo] = useState({} as Todo);
 
   useEffect(() => {
-    const todosRef = collection(db, 'todos');
-    const q = query(todosRef);
+    const q = query(collection(db, 'todos'), where('id', '==', params.id));
   
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const todosData = snapshot.docs.map(doc => ({
-        ...(doc.data() as Todo),
-      }));
-
-      setTodos(todosData);
+      if (!snapshot.empty) {
+        const todoData = snapshot.docs[0].data() as Todo;
+        setDocId(snapshot.docs[0].id);
+        setTodo(todoData);
+      }
     });
-  
-    // コンポーネントのアンマウント時にリスナーを解除
+
     return () => unsubscribe();
   }, []);
 
   const handleTodoDelete = () => {
-    const newTodos = todos.filter(todo => todo.id !== params.id);
-    setTodos(newTodos);
-    router.push('/todos');
+    if (docId) {
+      deleteDoc(doc(db, "todos", docId))
+        .then(() => {
+          console.log("Todo successfully deleted!");
+          router.push('/todos');
+        })
+        .catch((error) => {
+          console.error("Error removing document: ", error);
+      });
+    }
   }
 
   return (

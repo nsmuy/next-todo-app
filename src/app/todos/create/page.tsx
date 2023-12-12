@@ -4,15 +4,12 @@ import React, { useState } from 'react'
 import { useRouter} from "next/navigation";
 import { Todo } from '../../../types/Todo'
 import { Button} from '@mui/material'
-import { useRecoilState } from "recoil";
-import { todosState } from "@/app/components/atoms";
 import { collection, addDoc} from "firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 import { db } from "@/app/firebase";
 
 const Page = () => {
 
-  const [todos, setTodos] = useRecoilState<Todo[]>(todosState);
   const [newTodoTitle, setNewTodoTitle] = useState<Todo['title']>('');
   const [newTodoResponsible, setNewTodoResponsible] = useState<Todo['responsible']>('');
   const [newTodoStatus, setNewTodoStatus] = useState<Todo['status']>('untouched');
