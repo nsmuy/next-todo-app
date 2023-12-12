@@ -5,6 +5,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -20,29 +21,35 @@ import { Button } from "@mui/material";
 import { Todo } from "../../../types/Todo";
 import { getAuth } from "firebase/auth";
 import { app, db } from "@/app/firebase";
-import { collection, query, where, onSnapshot } from "firebase/firestore"; 
+import { collection, query, where, onSnapshot, Timestamp, addDoc, orderBy } from "firebase/firestore"; 
 
 type Comment = {
   docId: string,
   id: string,
   text: string,
-  createAt: string,
+  sendAt: Timestamp,
 }
 
 const page = () => {
   const auth = getAuth(app);
+  const params = useParams();
+  const todos = useRecoilValue<Todo[]>(todosState);
+  const todo = todos.find((todo) => todo.id === params.id);
   const [comments, setComments] = useState<Comment[]>([]);
+  const [sendComments, setSendComments] = useState<string>('');
 
   useEffect(() => {
     const commentsRef = collection(db, 'comments');
-    // 'id' フィールドが '0' であるドキュメントのみを取得するクエリ
-    const q = query(commentsRef, where('id', '==', '0'));
+    
+    // idフィールドの値とURLのパラメーターIDが一致し、sendAtでソートされたドキュメントを取得
+    const q = query(commentsRef, where('id', '==', params.id), orderBy('sendAt', 'asc'));
   
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const commentsData = snapshot.docs.map(doc => ({
         ...(doc.data() as Comment),
         docId: doc.id,
       }));
+  
       console.log(commentsData);
       setComments(commentsData);
     });
@@ -51,14 +58,24 @@ const page = () => {
     return () => unsubscribe();
   }, []);
 
-  const params = useParams();
-  const todos = useRecoilValue<Todo[]>(todosState);
-  const todo = todos.find((todo) => todo.id === params.id);
+  const handleSendComments = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    await addDoc(collection(db, "comments"), {
+      docId: uuidv4(),
+      id: params.id,
+      text: sendComments,
+      sendAt: Timestamp.now(),
+    });
+
+    setSendComments('');
+  }
 
   return (
-    <div>
+    <div className='flex flex-col items-center'>
+      <h2 className="text-4xl font-bold">タスク詳細</h2>
       {todo ? (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center mt-6">
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -97,12 +114,27 @@ const page = () => {
           </div>
 
           {/* コメント */}
-          <div>
-            {comments.map((comment) => (
-              <div key={comment.docId}>
-                {comment.text}
+          <div className="w-full mt-6">
+            <h3 className="text-2xl font-bold">コメント</h3>
+            <div className="bg-white p-4 rounded-lg">
+              {comments.map((comment) => (
+                <div key={comment.docId} className="flex justify-between">
+                  <p>{comment.text}</p>
+                  <p className="text-gray-500 text-sm">{comment.sendAt.toDate().toLocaleString()}</p>
+                </div>
+              ))}
+            </div>
+
+            <form onSubmit={handleSendComments} className="mt-4 w-full">
+              <div>
+                <input
+                  type="text"
+                  placeholder="コメントを入力してください"
+                  onChange={(e) => setSendComments(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                />
               </div>
-            ))}
+            </form>
           </div>
         </div>
       ) : (

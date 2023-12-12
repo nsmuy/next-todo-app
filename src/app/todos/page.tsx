@@ -3,7 +3,6 @@
  */
 
 "use client";
-
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -20,7 +19,7 @@ import { Todo } from "../../types/Todo";
 const page = () => {
 
   const todos = useRecoilValue<Todo[]>(todosState);
-  
+
   return (
     <div className='flex flex-col items-center'>
       <h2 className='text-4xl font-bold'>Todo一覧</h2>
@@ -42,16 +41,16 @@ const page = () => {
               key={todo.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell component="th" scope="todo">
+            <TableCell component="th" scope="todo">
                 {todo.title}
-              </TableCell>
-              <TableCell align="right">{todo.responsible}</TableCell>
-              <TableCell align="right">{todo.status}</TableCell>
-              <TableCell align="right">{todo.deadline}</TableCell>
-              <TableCell align="right">
-                <Link href={`/todos/${todo.id}`}>詳細</Link>
-              </TableCell>
-            </TableRow>
+            </TableCell>
+            <TableCell align="right">{todo.responsible}</TableCell>
+            <TableCell align="right">{todo.status}</TableCell>
+            <TableCell align="right">{todo.deadline}</TableCell>
+            <TableCell align="right">
+              <Link href={`/todos/${todo.id}`}>詳細</Link>
+            </TableCell>
+          </TableRow>
           ))}
         </TableBody>
       </Table>
