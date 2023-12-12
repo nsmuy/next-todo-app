@@ -4,14 +4,13 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { app } from "../firebase"
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
-import { useAuthContext } from "../context/AuthContext";
 
 const Page = () => {
 
