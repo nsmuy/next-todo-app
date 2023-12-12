@@ -4,13 +4,14 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { app } from "../firebase"
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
+import { useAuthContext } from "../context/AuthContext";
 
 const Page = () => {
 
@@ -19,27 +20,18 @@ const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // 新規登録を実行したら、todosページに遷移
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     await createUserWithEmailAndPassword(auth, email, password)
     router.push("/todos");
   }
-  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.currentTarget.value);
-  }
-  const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.currentTarget.value);
-  }
 
   return (
     <div className="flex flex-col items-center">
-
       <h2 className="text-4xl font-bold">新規登録</h2>
 
-      <form
-        onSubmit={handleSubmit}
-        className='mt-6'
-      >
+      <form onSubmit={handleSubmit} className='mt-6'>
         <div className='flex flex-col items-start'>
           <TextField
             id="standard-email-input"
@@ -47,7 +39,7 @@ const Page = () => {
             type="email"
             autoComplete="current-email"
             variant="standard"
-            onChange={handleChangeEmail}
+            onChange={(e) => setEmail(e.currentTarget.value)}
           />
           <TextField
             id="standard-password-input"
@@ -55,7 +47,7 @@ const Page = () => {
             type="password"
             autoComplete="current-password"
             variant="standard"
-            onChange={handleChangePassword}
+            onChange={(e) => setPassword(e.currentTarget.value)}
           />
         </div>
 
@@ -67,7 +59,7 @@ const Page = () => {
       </form>
 
       <div className="flex justify-end mt-6">
-          <Link href={"/"}>
+          <Link href={"/signin"}>
             登録済みの方はこちら
           </Link>
         </div>
