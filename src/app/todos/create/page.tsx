@@ -40,32 +40,36 @@ const Page = () => {
   }
 
   return (
-    <div>
-      <h2>新しいタスクを追加する</h2>
+    <div className='flex flex-col items-center gap-10'>
+      <h2 className='text-4xl font-bold text-center'>新しいタスクを追加する</h2>
       <form
           onSubmit={handleCreateSubmit}
-          className="flex flex-col items-start gap-4"
+          className="w-1/2 flex flex-col gap-4"
         >
-          <div>
-            <label htmlFor="title">タスク名</label>
+          <div className='flex gap-4'>
+            <label htmlFor="title" className='w-24'>タスク名</label>
             <input
               id="title"
               type="text"
               value={newTodoTitle}
               onChange={(e) => setNewTodoTitle(e.target.value)}
+              className='flex-1'
+              required
             />
           </div>
-          <div>
-            <label htmlFor="responsible">担当者</label>
+          <div className='flex gap-4'>
+            <label htmlFor="responsible" className='w-24'>担当者</label>
             <input
               id="responsible"
               type="text"
               value={newTodoResponsible}
               onChange={(e) => setNewTodoResponsible(e.target.value)}
+              className='flex-1'
+              required
               />
           </div>
-          <div>
-            <label htmlFor="status">ステート</label>
+          <div className='flex gap-4'>
+            <label htmlFor="status" className='w-24'>ステート</label>
             <select
               id="status"
               value={newTodoStatus}
@@ -76,22 +80,24 @@ const Page = () => {
               <option value="completed">completed</option>
             </select>
           </div>
-          <div>
-            <label htmlFor="detail">内容</label>
+          <div className='flex gap-4'>
+            <label htmlFor="detail" className='w-24'>内容</label>
             <input
               id="detail"
               type="text"
               value={newTodoDetail}
               onChange={(e) => setNewTodoDetail(e.target.value)}
+              className='flex-1'
             />
           </div>
-          <div>
-            <label htmlFor="deadline">期限</label>
+          <div className='flex gap-4'>
+            <label htmlFor="deadline" className='w-24'>期限</label>
             <input
               id="deadline"
               type="text"
               value={newTodoDeadline}
               onChange={(e) => setNewTodoDeadline(e.target.value)}
+              className='flex-1'
             />
           </div>
 
