@@ -6,7 +6,9 @@ import { Todo } from '../../../types/Todo'
 import { Button} from '@mui/material'
 import { useRecoilState } from "recoil";
 import { todosState } from "@/app/components/atoms";
+import { collection, addDoc} from "firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
+import { db } from "@/app/firebase";
 
 const Page = () => {
 
@@ -18,19 +20,18 @@ const Page = () => {
   const [newTodoDeadline, setNewTodoDeadline] = useState<Todo['deadline']>('');
   const router = useRouter();
 
-  const handleCreateSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleCreateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const newTodo: Todo = {
+    await addDoc(collection(db, "todos"), {
       id: uuidv4(),
       title: newTodoTitle,
       detail: newTodoDetail,
       status: newTodoStatus,
       responsible: newTodoResponsible,
-      deadline: newTodoDeadline
-    }
+      IdleDeadline: newTodoDeadline,
+    });
 
-    setTodos([...todos, newTodo]);
     router.push('/todos');
     setNewTodoTitle('');
     setNewTodoResponsible('');
