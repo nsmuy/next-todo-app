@@ -13,7 +13,14 @@ import { todosState } from "../../components/atoms";
 const Page = () => {
 
   const [todos, setTodos] = useRecoilState<Todo[]>(todosState);
-  const [newTodo, setNewTodo] = useState<Todo>({} as Todo);
+  const [newTodo, setNewTodo] = useState<Todo>({
+    id: '',
+    title: '',
+    detail: '',
+    status: 'untouched',
+    responsible: '',
+    deadline: '',
+  });
   const router = useRouter();
 
   const handleCreateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
