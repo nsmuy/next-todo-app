@@ -84,7 +84,7 @@ const Page = () => {
               />
           </div>
           <div className='flex gap-4'>
-            <label htmlFor="status" className='w-24'>ステート</label>
+            <label htmlFor="status" className='w-24'>ステータス</label>
             <input
               id="status"
               type="text"

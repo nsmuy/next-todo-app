@@ -87,7 +87,7 @@ const Page = () => {
             />
         </div>
         <div className='flex gap-4'>
-          <label htmlFor="status" className='w-24'>ステート</label>
+          <label htmlFor="status" className='w-24'>ステータス</label>
           <select
             id="status"
             value={newTodo.status}
