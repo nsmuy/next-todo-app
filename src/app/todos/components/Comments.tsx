@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { db } from "@/app/firebase";
-import { collection, query, where, onSnapshot, Timestamp, addDoc, orderBy } from "firebase/firestore";
+import { collection, query, where, onSnapshot, Timestamp, addDoc, orderBy, QueryDocumentSnapshot } from "firebase/firestore";
 import { useParams } from "next/navigation";
 import { Comment } from "@/types/Comment";
+import { Button } from "@mui/material";
 
 const Comments = () => {
 
@@ -33,6 +34,11 @@ const Comments = () => {
   const handleSendComments = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!sendComments) {
+      alert('コメントを入力してください');
+      return;
+    }
+
     await addDoc(collection(db, "comments"), {
       docId: uuidv4(),
       id: params.id,
@@ -57,8 +63,14 @@ const Comments = () => {
 
       <form onSubmit={handleSendComments} className="mt-4 w-full">
         <div>
-          <input type="text" placeholder="コメントを入力してください" onChange={(e) => setSendComments(e.target.value)} className="w-full p-2 border border-gray-300 rounded-lg" />
+          <input
+            type="text"
+            placeholder="コメントを入力してください"
+            value={sendComments}
+            onChange={(e) => setSendComments(e.target.value)}className="w-full p-2 border border-gray-300 rounded-lg" />
         </div>
+
+        <Button type="submit">送信</Button>
       </form>
     </div>
   );
