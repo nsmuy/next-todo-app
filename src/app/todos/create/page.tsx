@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { db } from "@/app/firebase";
 import { useRecoilState } from "recoil";
 import { todosState } from "../../components/atoms";
+import Link from 'next/link';
 
 const Page = () => {
 
@@ -42,6 +43,18 @@ const Page = () => {
 
     router.push('/todos');
     setNewTodo({} as Todo);
+  }
+
+  const handleCreateCancel = () => {
+    router.push('/todos');
+    setNewTodo({
+      id: '',
+      title: '',
+      detail: '',
+      status: 'untouched',
+      responsible: '',
+      deadline: '',
+    });
   }
 
   return (
@@ -106,8 +119,12 @@ const Page = () => {
           />
         </div>
 
-        <Button type="submit">追加する</Button>
-
+        <div className='flex justify-center gap-6'>
+          <Button onClick={handleCreateCancel}>
+            <Link href="/todos">キャンセル</Link>
+          </Button>
+          <Button type="submit">追加する</Button>
+        </div>
       </form>
     </div>
   )
