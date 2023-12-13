@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,7 +9,6 @@ import Paper from '@mui/material/Paper';
 import Link from 'next/link';
 import { Button } from '@mui/material';
 import { Todo } from "../../../types/Todo";
-import { useRouter } from "next/navigation";
 import { collection, query, onSnapshot } from "firebase/firestore";
 import { db } from "@/app/firebase";
 import { useRecoilState } from "recoil";
@@ -17,7 +16,6 @@ import { todosState } from "../../components/atoms";
 
 const TodoList = () => {
 
-  const router = useRouter();
   const [todos, setTodos] = useRecoilState<Todo[]>(todosState); 
 
   useEffect(() => {

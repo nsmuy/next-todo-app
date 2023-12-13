@@ -14,7 +14,6 @@ import { deleteDoc, doc } from "firebase/firestore";
 import { Todo } from "@/types/Todo";
 import { useRecoilState } from "recoil";
 import { todosState } from "@/app/components/atoms";
-import { RouterContext } from "next/dist/shared/lib/router-context.shared-runtime";
 
 const TodoDetail = () => {
   const [docId, setDocId] = useState("");

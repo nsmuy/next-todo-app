@@ -5,7 +5,6 @@
 "use client";
 
 import React from "react";
-import { useParams } from "next/navigation";
 import TodoDetail from "../components/TodoDetail";
 import Comments from "../components/Comments";
 

@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { useRouter} from "next/navigation";
 import { Todo } from '../../../types/Todo'
 import { Button} from '@mui/material'
-import { collection, addDoc, setDoc, doc} from "firebase/firestore";
+import { setDoc, doc} from "firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 import { db } from "@/app/firebase";
 import { useRecoilState } from "recoil";
@@ -13,11 +13,7 @@ import { todosState } from "../../components/atoms";
 const Page = () => {
 
   const [todos, setTodos] = useRecoilState<Todo[]>(todosState);
-  const [newTodoTitle, setNewTodoTitle] = useState<Todo['title']>('');
-  const [newTodoResponsible, setNewTodoResponsible] = useState<Todo['responsible']>('');
-  const [newTodoStatus, setNewTodoStatus] = useState<Todo['status']>('untouched');
-  const [newTodoDetail, setNewTodoDetail] = useState<Todo['detail']>('');
-  const [newTodoDeadline, setNewTodoDeadline] = useState<Todo['deadline']>('');
+  const [newTodo, setNewTodo] = useState<Todo>({} as Todo);
   const router = useRouter();
 
   const handleCreateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -27,33 +23,18 @@ const Page = () => {
 
     //forebaseにデータを送信（ドキュメントIDを指定）
     await setDoc(doc(db, "todos", newTodoId), {
+      ...newTodo,
       id: newTodoId,
-      title: newTodoTitle,
-      detail: newTodoDetail,
-      status: newTodoStatus,
-      responsible: newTodoResponsible,
-      deadline: newTodoDeadline,
     })
 
     // recoilにデータを追加
     setTodos([
       ...todos,
-      {
-        id: newTodoId,
-        title: newTodoTitle,
-        detail: newTodoDetail,
-        status: newTodoStatus,
-        responsible: newTodoResponsible,
-        deadline: newTodoDeadline,
-      }
+      {...newTodo, id: newTodoId}
     ])
 
     router.push('/todos');
-    setNewTodoTitle('');
-    setNewTodoResponsible('');
-    setNewTodoStatus('untouched');
-    setNewTodoDetail('');
-    setNewTodoDeadline('');
+    setNewTodo({} as Todo);
   }
 
   return (
@@ -63,64 +44,64 @@ const Page = () => {
           onSubmit={handleCreateSubmit}
           className="w-1/2 flex flex-col gap-4"
         >
-          <div className='flex gap-4'>
-            <label htmlFor="title" className='w-24'>タスク名</label>
-            <input
-              id="title"
-              type="text"
-              value={newTodoTitle}
-              onChange={(e) => setNewTodoTitle(e.target.value)}
-              className='flex-1'
-              required
+        <div className='flex gap-4'>
+          <label htmlFor="title" className='w-24'>タスク名</label>
+          <input
+            id="title"
+            type="text"
+            value={newTodo.title}
+            onChange={(e) => setNewTodo({...newTodo, title: e.target.value})}
+            className='flex-1'
+            required
+          />
+        </div>
+        <div className='flex gap-4'>
+          <label htmlFor="responsible" className='w-24'>担当者</label>
+          <input
+            id="responsible"
+            type="text"
+            value={newTodo.responsible}
+            onChange={(e) => setNewTodo({...newTodo, responsible: e.target.value})}
+            className='flex-1'
+            required
             />
-          </div>
-          <div className='flex gap-4'>
-            <label htmlFor="responsible" className='w-24'>担当者</label>
-            <input
-              id="responsible"
-              type="text"
-              value={newTodoResponsible}
-              onChange={(e) => setNewTodoResponsible(e.target.value)}
-              className='flex-1'
-              required
-              />
-          </div>
-          <div className='flex gap-4'>
-            <label htmlFor="status" className='w-24'>ステート</label>
-            <select
-              id="status"
-              value={newTodoStatus}
-              onChange={(e) => setNewTodoStatus(e.target.value as Todo['status'])}
-            >
-              <option value="untouched">untouched</option>
-              <option value="processing">processing</option>
-              <option value="completed">completed</option>
-            </select>
-          </div>
-          <div className='flex gap-4'>
-            <label htmlFor="detail" className='w-24'>内容</label>
-            <input
-              id="detail"
-              type="text"
-              value={newTodoDetail}
-              onChange={(e) => setNewTodoDetail(e.target.value)}
-              className='flex-1'
-            />
-          </div>
-          <div className='flex gap-4'>
-            <label htmlFor="deadline" className='w-24'>期限</label>
-            <input
-              id="deadline"
-              type="text"
-              value={newTodoDeadline}
-              onChange={(e) => setNewTodoDeadline(e.target.value)}
-              className='flex-1'
-            />
-          </div>
+        </div>
+        <div className='flex gap-4'>
+          <label htmlFor="status" className='w-24'>ステート</label>
+          <select
+            id="status"
+            value={newTodo.status}
+            onChange={(e) => setNewTodo({...newTodo, status: e.target.value as Todo['status']})}
+          >
+            <option value="untouched">untouched</option>
+            <option value="processing">processing</option>
+            <option value="completed">completed</option>
+          </select>
+        </div>
+        <div className='flex gap-4'>
+          <label htmlFor="detail" className='w-24'>内容</label>
+          <input
+            id="detail"
+            type="text"
+            value={newTodo.detail}
+            onChange={(e) => setNewTodo({...newTodo, detail: e.target.value})}
+            className='flex-1'
+          />
+        </div>
+        <div className='flex gap-4'>
+          <label htmlFor="deadline" className='w-24'>期限</label>
+          <input
+            id="deadline"
+            type="text"
+            value={newTodo.deadline}
+            onChange={(e) => setNewTodo({...newTodo, deadline: e.target.value})}
+            className='flex-1'
+          />
+        </div>
 
-          <Button type="submit">追加する</Button>
+        <Button type="submit">追加する</Button>
 
-        </form>
+      </form>
     </div>
   )
 }
