@@ -9,13 +9,16 @@ import Paper from '@mui/material/Paper';
 import Link from 'next/link';
 import { Button } from '@mui/material';
 import { Todo } from "../../../types/Todo";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { collection, query, onSnapshot } from "firebase/firestore";
 import { db } from "@/app/firebase";
+import { useRecoilState } from "recoil";
+import { todosState } from "../../components/atoms";
 
 const TodoList = () => {
 
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const router = useRouter();
+  const [todos, setTodos] = useRecoilState<Todo[]>(todosState); 
 
   useEffect(() => {
     const q = query(collection(db, "todos"));

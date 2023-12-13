@@ -5,9 +5,6 @@
 "use client";
 
 import React, { useEffect } from 'react';
-import { useRecoilValue } from "recoil";
-import { todosState } from "../components/atoms";
-import { Todo } from "../../types/Todo";
 import { useRouter } from "next/navigation"
 import { useAuthContext } from '../context/AuthContext';
 import TodoList from './components/TodoList';

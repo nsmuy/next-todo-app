@@ -1,52 +1,58 @@
 import React, { useState, useEffect } from "react";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Link from 'next/link';
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import Link from "next/link";
 import { Button } from "@mui/material";
 import { useRouter, useParams } from "next/navigation";
 import { db } from "@/app/firebase";
-import { collection, query, where, onSnapshot, deleteDoc, doc} from "firebase/firestore";
+import { deleteDoc, doc } from "firebase/firestore";
 import { Todo } from "@/types/Todo";
-
+import { useRecoilState } from "recoil";
+import { todosState } from "@/app/components/atoms";
+import { RouterContext } from "next/dist/shared/lib/router-context.shared-runtime";
 
 const TodoDetail = () => {
-
-  const [docId, setDocId] = useState('');
+  const [docId, setDocId] = useState("");
   const router = useRouter();
   const params = useParams();
-  const [todo, setTodo] = useState({} as Todo);
+  const [todos, setTodos] = useRecoilState<Todo[]>(todosState);
+  const [todo, setTodo] = useState<Todo | null>(null);
 
   useEffect(() => {
-    const q = query(collection(db, 'todos'), where('id', '==', params.id));
-  
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      if (!snapshot.empty) {
-        const todoData = snapshot.docs[0].data() as Todo;
-        setDocId(snapshot.docs[0].id);
-        setTodo(todoData);
-      }
-    });
+    const todo = todos.find((todo) => todo.id === params.id);
+    if (todo) {
+      setTodo(todo);
+      setDocId(todo.id);
+    }
+  }, [router]);
 
-    return () => unsubscribe();
-  }, []);
 
   const handleTodoDelete = () => {
+
+    // Firebaseのドキュメントを削除
     if (docId) {
+      console.log(docId);
       deleteDoc(doc(db, "todos", docId))
-        .then(() => {
-          console.log("Todo successfully deleted!");
-          router.push('/todos');
-        })
-        .catch((error) => {
-          console.error("Error removing document: ", error);
+      .then(() => {
+        // Recoilのドキュメントを削除
+        if (todo) {
+          const newTodos = todos.filter((todoItem) => todoItem.id !== todo.id);
+          setTodos(newTodos);
+        }
+
+        // 削除後にリダイレクト
+        router.push("/todos");
+      })
+      .catch((error) => {
+        console.error("Error removing document: ", error);
       });
     }
-  }
+  };
 
   return (
     <>
@@ -62,15 +68,17 @@ const TodoDetail = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow key={todo.id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-              <TableCell component="th" scope="todo">
-                {todo.title}
-              </TableCell>
-              <TableCell align="right">{todo.responsible}</TableCell>
-              <TableCell align="right">{todo.status}</TableCell>
-              <TableCell align="right">{todo.detail}</TableCell>
-              <TableCell align="right">{todo.deadline}</TableCell>
-            </TableRow>
+            {todo && (
+              <TableRow key={todo.id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                <TableCell component="th" scope="todo">
+                  {todo.title}
+                </TableCell>
+                <TableCell align="right">{todo.responsible}</TableCell>
+                <TableCell align="right">{todo.status}</TableCell>
+                <TableCell align="right">{todo.detail}</TableCell>
+                <TableCell align="right">{todo.deadline}</TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
@@ -79,13 +87,14 @@ const TodoDetail = () => {
         <Link href="/todos">
           <Button>前のページに戻る</Button>
         </Link>
-        <Link href={`/todos/${todo.id}/edit`}>
-          <Button>編集</Button>
-        </Link>
+        {todo && (
+          <Link href={`/todos/${todo.id}/edit`}>
+            <Button>編集</Button>
+          </Link>
+        )}
         <Button onClick={handleTodoDelete}>削除</Button>
       </div>
     </>
   );
 };
-
 export default TodoDetail;
